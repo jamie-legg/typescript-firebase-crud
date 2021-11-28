@@ -7,6 +7,7 @@ import {
   HomeIcon,
   MenuAlt2Icon,
   PhotographIcon,
+  BookOpenIcon,
   PlusSmIcon as PlusSmIconOutline,
   UserGroupIcon,
   ViewGridIcon as ViewGridIconOutline,
@@ -20,11 +21,17 @@ import {
   ViewListIcon,
 } from '@heroicons/react/solid'
 import Notes from '../components/Notes'
+import NarrowSidebar from '../components/NarrowSidebar'
+
+import useSWR from 'swr';
+import axios from 'axios';
+import Book from '../components/Book'
+import CurrentBook from '../components/CurrentBook'
 
 const navigation = [
   { name: 'Home', href: '#', icon: HomeIcon, current: false },
   { name: 'All Files', href: 'files', icon: ViewGridIconOutline, current: false },
-  { name: 'Books', href: '#', icon: PhotographIcon, current: true },
+  { name: 'Books', href: '#', icon: BookOpenIcon, current: true },
   { name: 'Shared', href: '#', icon: UserGroupIcon, current: false },
   { name: 'Albums', href: '#', icon: CollectionIcon, current: false },
   { name: 'Settings', href: '#', icon: CogIcon, current: false },
@@ -38,149 +45,7 @@ const tabs = [
   { name: 'Recently Added', href: '#', current: false },
   { name: 'Favorited', href: '#', current: false },
 ]
-const files = [
-  {
-    name: 'file 1.jpg',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'file 2.jpg',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: false,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  {
-    name: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    current: true,
-  },
-  // More files...
-]
+
 const currentFile = {
   name: 'IMG_4985.HEIC',
   size: '3.9 MB',
@@ -199,7 +64,20 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
+const fetcher = (url) => axios.get(url)
+
 export default function IndexPage() {
+
+  const [ currentBookIndex, setCurrentBookIndex ] = useState(0)
+
+  const { data, error } = useSWR('/api/data', fetcher)
+
+  let books;
+  if(data) {
+    books = data.data;
+  }
+
+  
   
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -207,39 +85,7 @@ export default function IndexPage() {
     <>
       <div className="h-full flex">
         {/* Narrow sidebar */}
-        <div className="hidden w-28 bg-green-700 overflow-y-auto md:block">
-          <div className="w-full py-6 flex flex-col items-center">
-            <div className="flex-shrink-0 flex items-center">
-              <img
-                className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/workflow-mark.svg?color=white"
-                alt="Workflow"
-              />
-            </div>
-            <div className="flex-1 mt-6 w-full px-2 space-y-1">
-              {navigation.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className={classNames(
-                    item.current ? 'bg-green-800 text-white' : 'text-green-100 hover:bg-green-800 hover:text-white',
-                    'group w-full p-3 rounded-md flex flex-col items-center text-xs font-medium'
-                  )}
-                  aria-current={item.current ? 'page' : undefined}
-                >
-                  <item.icon
-                    className={classNames(
-                      item.current ? 'text-white' : 'text-green-300 group-hover:text-white',
-                      'h-6 w-6'
-                    )}
-                    aria-hidden="true"
-                  />
-                  <span className="mt-2">{item.name}</span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
+        <NarrowSidebar navigation={navigation} />
 
         {/* Mobile menu */}
         <Transition.Root show={mobileMenuOpen} as={Fragment}>
@@ -433,14 +279,14 @@ export default function IndexPage() {
                   <div className="ml-6 bg-gray-100 p-0.5 rounded-lg flex items-center sm:hidden">
                     <button
                       type="button"
-                      className="p-1.5 rounded-md text-gray-400 hover:bg-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
+                      className="p-1.5 bg-white rounded-md text-gray-400 hover:bg-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
                     >
                       <ViewListIcon className="h-5 w-5" aria-hidden="true" />
                       <span className="sr-only">Use list view</span>
                     </button>
                     <button
                       type="button"
-                      className="ml-0.5 bg-white p-1.5 rounded-md shadow-sm text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
+                      className="ml-0.5 p-1.5 rounded-md shadow-sm text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
                     >
                       <ViewGridIconSolid className="h-5 w-5" aria-hidden="true" />
                       <span className="sr-only">Use grid view</span>
@@ -512,81 +358,18 @@ export default function IndexPage() {
                   </h2>
                   <ul
                     role="list"
-                    className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8"
+                    className="flex flex-col gap-y-4"
                   >
-                    {files.map((file) => (
-                      <li key={file.name} className="relative">
-                        <div
-                          className={classNames(
-                            file.current
-                              ? 'ring-2 ring-offset-2 ring-green-500'
-                              : 'focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 focus-within:ring-green-500',
-                            'group block w-full aspect-w-10 aspect-h-7 rounded-lg bg-gray-100 overflow-hidden'
-                          )}
-                        >
-                          <img
-                            src={file.source}
-                            alt=""
-                            className={classNames(
-                              file.current ? '' : 'group-hover:opacity-75',
-                              'object-cover pointer-events-none'
-                            )}
-                          />
-                          <button type="button" className="absolute inset-0 focus:outline-none">
-                            <span className="sr-only">View details for {file.name}</span>
-                          </button>
-                        </div>
-                        <p className="mt-2 block text-sm font-medium text-gray-900 truncate pointer-events-none">
-                          {file.name}
-                        </p>
-                        <p className="block text-sm font-medium text-gray-500 pointer-events-none">{file.size}</p>
-                      </li>
-                    ))}
+                    {books? books.map((book, index) => (
+                      <Book isClicked={currentBookIndex === index} book={book} index={index} onClick={() => setCurrentBookIndex(index)} />
+                    )) : <div>Loading...</div>}
                   </ul>
                 </section>
               </div>
             </main>
 
             {/* Details sidebar */}
-            <aside className="hidden w-96 bg-white p-8 border-l border-gray-200 overflow-y-auto lg:block">
-              <div className="pb-16 space-y-6">
-                <div>
-                  <div className="block w-full aspect-w-10 aspect-h-7 rounded-lg overflow-hidden">
-                    <img src={currentFile.source} alt="" className="object-cover" />
-                  </div>
-                  <div className="mt-4 flex items-start justify-between">
-                    <div>
-                      <h2 className="text-lg font-medium text-gray-900">
-                        <span className="sr-only">Details for </span>
-                        {currentFile.name}
-                      </h2>
-                      <p className="text-sm font-medium text-gray-500">{currentFile.size}</p>
-                    </div>
-                    <button
-                      type="button"
-                      className="ml-4 bg-white rounded-full h-8 w-8 flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500"
-                    >
-                      <HeartIcon className="h-6 w-6" aria-hidden="true" />
-                      <span className="sr-only">Favorite</span>
-                    </button>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-medium text-gray-900">Information</h3>
-                  <dl className="mt-2 border-t border-b border-gray-200 divide-y divide-gray-200">
-                    {Object.keys(currentFile.information).map((key) => (
-                      <div key={key} className="py-3 flex justify-between text-sm font-medium">
-                        <dt className="text-gray-500">{key}</dt>
-                        <dd className="text-gray-900">{currentFile.information[key]}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                </div>
-                <div>
-                </div>
-                <Notes />
-              </div>
-            </aside>
+            <CurrentBook book={books? books[currentBookIndex] : 0} index={currentBookIndex} />
           </div>
         </div>
       </div>
