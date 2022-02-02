@@ -1,16 +1,7 @@
 import { HeartIcon } from "@heroicons/react/outline";
+import useSWR from "swr";
 import Notes from "./Notes";
 
-average_rating: 4.21
-bookID: 21
-isbn: "076790818X"
-isbn13: 9780767908184
-language_code: "eng"
-num_pages: 544
-publication_date: "9/14/2004"
-publisher: "Broadway Books"
-ratings_count: 248558
-text_reviews_count: 9396
 
 export default function CurrentBook({ book, index }) {
     return (

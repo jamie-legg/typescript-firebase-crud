@@ -27,6 +27,7 @@ import useSWR from 'swr';
 import axios from 'axios';
 import Book from '../components/Book'
 import CurrentBook from '../components/CurrentBook'
+import Tabs from '../components/Tabs'
 
 const navigation = [
   { name: 'Home', href: '#', icon: HomeIcon, current: false },
@@ -40,11 +41,7 @@ const userNavigation = [
   { name: 'Your profile', href: '#' },
   { name: 'Sign out', href: '#' },
 ]
-const tabs = [
-  { name: 'Recently Viewed', href: '#', current: true },
-  { name: 'Recently Added', href: '#', current: false },
-  { name: 'Favorited', href: '#', current: false },
-]
+
 
 const currentFile = {
   name: 'IMG_4985.HEIC',
@@ -69,6 +66,7 @@ const fetcher = (url) => axios.get(url)
 export default function IndexPage() {
 
   const [ currentBookIndex, setCurrentBookIndex ] = useState(0)
+  const [ favouriteBooks, setFavouriteBooks ] = useState([])
 
   const { data, error } = useSWR('/api/data', fetcher)
 
@@ -276,6 +274,10 @@ export default function IndexPage() {
               <div className="pt-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex">
                   <h1 className="flex-1 text-2xl font-bold text-gray-900">Books</h1>
+                  <button className="bg-green-600 p-1 rounded-full items-center justify-center text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    <PlusSmIconOutline className="h-6 w-6 inline-block" aria-hidden="true" />
+                    <span className="uppercase font-bold justify-center px-2.5">NEW BOOK</span>
+                  </button>
                   <div className="ml-6 bg-gray-100 p-0.5 rounded-lg flex items-center sm:hidden">
                     <button
                       type="button"
@@ -295,61 +297,7 @@ export default function IndexPage() {
                 </div>
 
                 {/* Tabs */}
-                <div className="mt-3 sm:mt-2">
-                  <div className="sm:hidden">
-                    <label htmlFor="tabs" className="sr-only">
-                      Select a tab
-                    </label>
-                    {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
-                    <select
-                      id="tabs"
-                      name="tabs"
-                      className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md"
-                      defaultValue="Recently Viewed"
-                    >
-                      <option>Recently Viewed</option>
-                      <option>Recently Added</option>
-                      <option>Favorited</option>
-                    </select>
-                  </div>
-                  <div className="hidden sm:block">
-                    <div className="flex items-center border-b border-gray-200">
-                      <nav className="flex-1 -mb-px flex space-x-6 xl:space-x-8" aria-label="Tabs">
-                        {tabs.map((tab) => (
-                          <a
-                            key={tab.name}
-                            href={tab.href}
-                            aria-current={tab.current ? 'page' : undefined}
-                            className={classNames(
-                              tab.current
-                                ? 'border-green-500 text-green-600'
-                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
-                              'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'
-                            )}
-                          >
-                            {tab.name}
-                          </a>
-                        ))}
-                      </nav>
-                      <div className="hidden ml-6 bg-gray-100 p-0.5 rounded-lg items-center sm:flex">
-                        <button
-                          type="button"
-                          className="p-1.5 rounded-md text-gray-400 hover:bg-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
-                        >
-                          <ViewListIcon className="h-5 w-5" aria-hidden="true" />
-                          <span className="sr-only">Use list view</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="ml-0.5 bg-white p-1.5 rounded-md shadow-sm text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
-                        >
-                          <ViewGridIconSolid className="h-5 w-5" aria-hidden="true" />
-                          <span className="sr-only">Use grid view</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <Tabs />
 
                 {/* Gallery */}
                 <section className="mt-8 pb-16" aria-labelledby="gallery-heading">
